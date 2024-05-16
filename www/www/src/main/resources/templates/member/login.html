@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{layout :: setFragment(~{this::content})}">
+    <th:block th:fragment="content">
+        <div class="mt-4 p-5 bg-primary text-white rounded">
+            <h1> Login Page</h1>
+            <form action="/member/login" method="post">
+                <div class="mb-3">
+                    <label for="email" class="form-label">E-mail</label>
+                    <input type="email" class="form-control" name="email" id="email" placeholder="example@test.com...">
+                    <ul id="ul"></ul>
+                    <!-- <button type="button"  class="btn btn-primary btn-sm" id="dupBtn">중복확인</button> -->
+                </div>
+                <div class="mb-3">
+                    <label for="pwd" class="form-label">PassWord</label>
+                    <input type="password" class="form-control dupclick" name="pwd" id="pwd" placeholder="PassWord...">
+                </div>
+
+<!--                <div class="mb-3 text-danger" th:if="${not empty param.errMsg}">-->
+<!--                    <p>관리자에게 문의해주세요</p>-->
+<!--                </div>-->
+
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+        </div>
+    </th:block>
+</th:block>

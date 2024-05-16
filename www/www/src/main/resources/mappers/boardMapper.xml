@@ -11,6 +11,9 @@
 
     <select id="getList" resultType="com.ezen.www.domain.BoardVO">
         select * from board
+        <include refid="search"></include>
+        order by bno desc
+        limit #{pageStart}, #{qty}
     </select>
 
     <select id="detail" resultType="com.ezen.www.domain.BoardVO">
@@ -24,4 +27,35 @@
     <delete id="remove">
         delete from board where bno=#{bno}
     </delete>
+
+    <select id="getTotal" resultType="int">
+        select count(bno) from board
+        <include refid="search"></include>
+    </select>
+
+    <select id="getBno" resultType="long">
+        select max(bno) from board
+    </select>
+
+    <sql id="search">
+        <if test="type != null">
+            <trim prefix="where (" suffix=")" suffixOverrides="or">
+                <foreach collection="typeToArray" item="type">
+                    <trim suffix="or">
+                        <choose>
+                            <when test="type=='t'.toString">
+                                title like concat('%',#{keyword},'%')
+                            </when>
+                            <when test="type=='w'.toString">
+                                writer like concat('%',#{keyword},'%')
+                                </when>
+                            <when test="type=='c'.toString">
+                                content like concat('%',#{keyword},'%')
+                            </when>
+                        </choose>
+                    </trim>
+                </foreach>
+            </trim>
+        </if>
+    </sql>
 </mapper>

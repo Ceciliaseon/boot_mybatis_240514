@@ -2,30 +2,57 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <th:block th:replace="~{layout :: setFragment(~{this::content})}">
     <th:block th:fragment="content">
+        <th:block th:with="bvo=${bdto.bvo}">
         <div class="container-md">
             <h1>Board Detail Page</h1>
             <form action="/board/modify" method="post" id="modForm">
                 <input type="hidden" name="bno" th:value="${bvo.bno}">
                 <div class="my-3">
-                    <label for="title">Title : </label>
+                    <label for="title">Title </label>
                     <input type="text" class="form-control" id="title" name="title" th:value="${bvo.title }" readonly>
                 </div>
                 <div class="my-3">
-                    <label for="writer">writer : </label>
+                    <label for="writer">writer</label>
                     <input type="text" class="form-control" id="writer" name="writer" th:value="${bvo.writer }" readonly>
                 </div>
                 <div class="my-3">
-                    <label for="content">Content : </label>
+                    <label for="content">Content</label>
                     <textarea class="form-control" id="content" name="content" cols="50" rows="5" readonly>[[${bvo.content}]]</textarea>
                 </div>
                 <div class="my-3">
-                    <label for="created"> Created At : </label>
+                    <label for="created">Created At</label>
                     <input type="text" class="form-control" id="created" th:value="${bvo.regAt }" readonly>
                 </div>
                 <div class="my-3">
-                    <label for="modified"> mpdified At : </label>
+                    <label for="modified">mpdified At</label>
                     <input type="text" class="form-control" id="modified" th:value="${bvo.modAt }" readonly>
                 </div>
+                <div class="my-3">
+                    <label for="modified">File</label>
+                    <ul class="list-group list-group-flush">
+                        <li th:each="fvo:${bdto.flist}" class="list-group-item" >
+                            <div th:if="${fvo.fileType > 0}" class="ms-2 me-auto">
+                                <img alt="" th:src="@{|/upload/${fvo.saveDir }/${fvo.uuid}_${fvo.fileName}|}">
+                            </div>
+                            <div th:unless="${fvo.fileType > 0}" class="ms-2 me-auto">
+                                <a th:href="@{|/upload/${fvo.saveDir }/${fvo.uuid}_${fvo.fileName}|}" download="${fvo.fileName}">
+                                    <!--파일 아이콘-->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-file-earmark-check" viewBox="0 0 16 16">
+                                        <path d="M10.854 7.854a.5.5 0 0 0-.708-.708L7.5 9.793 6.354 8.646a.5.5 0 1 0-.708.708l1.5 1.5a.5.5 0 0 0 .708 0z"/>
+                                        <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+                                    </svg>
+                                </a>
+
+                            </div>
+                            <div class="ms-2 me-auto">
+                                <div class="ms-2 me-auto">[[${fvo.fileName}]]</div>
+                                [[${fvo.regAt}]]
+                                <span class="badge rounded-pill text-bg-warning"> [[${fvo.fileSize }]] Byte</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
                 <button type="button" id="listBtn" class="btn btn-outline-primary">List</button>
                 <!-- detail page에서 modify 상태로 변경하기 위한 버튼 -->
                 <button type="button" id="modBtn" class="btn btn-outline-warning">Modify</button>
@@ -37,5 +64,6 @@
             </form>
         </div>
         <script th:src="@{/js/boardDetail.js}"></script>
+        </th:block>
     </th:block>
 </th:block>

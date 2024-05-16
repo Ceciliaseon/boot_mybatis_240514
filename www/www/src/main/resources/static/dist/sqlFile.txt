@@ -7,3 +7,29 @@ content text not null,
 reg_at datetime default now(),
 mod_at datetime default now(),
 primary key(bno));
+
+-- file table 생성 (2024.05.14)
+create table file(
+uuid varchar(256) not null,
+save_dir varchar(256) not null,
+file_name varchar(256) not null,
+file_type int(1) default 0,
+bno bigint not null,
+file_size bigint not null,
+reg_at datetime default now(),
+primary key(uuid));
+
+-- member table (2024.05.16)
+create table member(
+email varchar(200) not null,
+pwd varchar(256) not null,
+nick_name varchar(100),
+reg_at datetime default now(),
+last_login datetime,
+primary key(email));
+
+create table auth_member(
+email varchar(200) not null,
+auth varchar(100) not null,
+foreign key (email) references
+member(email));

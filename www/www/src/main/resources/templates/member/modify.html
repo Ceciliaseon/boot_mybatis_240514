@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<th:block th:replace="~{layout :: setFragment(~{this::content})}">
+    <th:block th:fragment="content">
+        <div class="mt-4 p-5 rounded">
+            <h1> Member </h1>
+            <sec:authentication property="principal.mvo.email" var="authEmail"/>
+            <sec:authentication property="principal.mvo.nickName" var="authNick"/>
+            <sec:authentication property="principal.mvo.authList" var="auths"/>
+            <sec:authentication property="principal.mvo.lastLogin" var="lastLogin"/>
+            <sec:authentication property="principal.mvo.pwd" var="authPwd"/>
+
+            <form action="/member/modify" method="post">
+                <th:block sec:authorize="isAuthenticated()">
+                    <div class="mb-3">
+                        <label for="nickName" class="form-label">nickName</label>
+                        <label class="text-primary" style="font-size: 12px;"> ** 수정가능</label>
+                        <input type="text" class="form-control" name="nickName" id="nickName" th:with="auth=${#authentication.getPrincipal()}" th:value="${auth.mvo.nickName}" placeholder="NickName...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">E-mail</label>
+                        <label class="text-danger" style="font-size: 12px;"> * 수정불가</label>
+                        <input type="text" class="form-control" name="email" id="email" readonly="readonly" th:with="auth=${#authentication.getPrincipal()}" th:value="${auth.mvo.email}" placeholder="Email...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="pwd" class="form-label">Password</label>
+                        <label class="text-primary" style="font-size: 12px;"> ** 수정가능</label>
+                        <input type="password" class="form-control" name="pwd" id="pwd" placeholder="Password...">
+                    </div>
+                    <div class="mb-3" th:with="auth=${#authentication.getPrincipal()}">
+                        <label class="form-label">Auth</label>
+                        <label class="text-danger" style="font-size: 12px;"> * 수정불가</label>
+                        <span th:each="userAuth:${auth.mvo.authList}">
+                            <input type="text" class="form-control" name="auth" readonly="readonly" th:value="${userAuth.auth}">
+                        </span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="login" class="form-label">Last login</label>
+                        <label class="text-danger" style="font-size: 12px;"> * 수정불가</label>
+                        <input type="text" class="form-control" name="lastLogin" id="login" readonly="readonly"
+                               th:with="auth=${#authentication.getPrincipal()}" th:value="${auth.mvo.lastLogin}">
+                    </div>
+                </th:block>
+                <button type="submit" class="btn btn-primary" id="userModify">정보수정</button>
+                <!-- <a href="/user/delete"><button type="button" class="btn btn-danger">회원탈퇴</button></a> -->
+                <button type="button" class="btn btn-danger" id="delBtn">회원탈퇴</button>
+            </form>
+        </div>
+        <script>
+            document.getElementById('delBtn').addEventListener('click',()=>{
+                let check = confirm('정말 탈퇴하시겠습니까?');
+                if(check){
+                    location.href="/member/remove";
+                }
+            })
+        </script>
+    </th:block>
+</th:block>

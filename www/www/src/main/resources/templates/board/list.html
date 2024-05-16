@@ -4,6 +4,35 @@
     <th:block th:fragment="content">
         <div class="container-sm">
             <h1>Board List Page</h1>
+            <!--검색라인-->
+            <form action="/board/list">
+                <div class="input-group">
+                    <input type="text" name="keyword" class="form-control"
+                               th:value="${ph.pgvo.keyword }" placeholder="Search..." aria-label="Username" aria-describedby="basic-addon1">
+                    <input type="hidden" name="pageNo" th:value="1">
+                    <input type="hidden" name="qty" th:value="10">
+
+                    <select class="form-select" name="type" id="inputGroupSelect04" aria-label="Example select with button addon">
+                        <option th:selected="${ph.pgvo.type == null ? true : false}"> Choose... </option>
+                        <option th:value="t" th:selected="${ph.pgvo.type == 't' ? true : false}">Title</option>
+                        <option th:value="w" th:selected="${ph.pgvo.type == 'w' ? true : false}">Writer</option>
+                        <option th:value="c" th:selected="${ph.pgvo.type == 'c' ? true : false}">Content</option>
+                        <option th:value="tc" th:selected="${ph.pgvo.type == 'tc' ? true : false}">Title & Content</option>
+                        <option th:value="wc" th:selected="${ph.pgvo.type == 'wc' ? true : false}">Writer & Content</option>
+                        <option th:value="tw" th:selected="${ph.pgvo.type == 'tw' ? true : false}">Title & Writer</option>
+                        <option th:value="twc" th:selected="${ph.pgvo.type == 'twc' ? true : false}">All</option>
+                    </select>
+
+                    <button class="btn btn-primary" type="submit">
+                        Search
+                        <span th:text="${ph.totalCount }" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            <span class="visually-hidden">unread messages</span>
+                        </span>
+                    </button>
+                </div>
+                <br>
+            </form>
+
             <table class="table table-dark table-striped-columns">
                 <thead>
                 <tr>
@@ -23,6 +52,30 @@
                 </tr>
                 </tbody>
             </table>
+
+            <!--페이지 네이션 라인 -->
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:if="${ph.prev}">
+                        <a class="page-link " th:href="@{/board/list(pageNo=${ph.startPage-1 },qty=${ph.pgvo.qty},type=${ph.pgvo.type},keyword=${ph.pgvo.keyword})}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    <!--th:classappend 동적 클래스 추가 -->
+                    <th:block th:each="i: ${#numbers.sequence(ph.startPage,ph.endPage)}">
+                        <li class="page-item" th:classappend="${ph.pgvo.pageNo == i ? 'active' : ''}" aria-current="page">
+                            <a class="page-link" th:href="@{/board/list(pageNo=${i},qty=${ph.pgvo.qty},type=${ph.pgvo.type},keyword=${ph.pgvo.keyword})}">[[${i}]]</a>
+                        </li>
+                    </th:block>
+
+                    <li class="page-item" th:if="${ph.next}">
+                        <a class="page-link" th:href="@{/board/list(pageNo=${ph.endPage+1 },qty=${ph.pgvo.qty},type=${ph.pgvo.type},keyword=${ph.pgvo.keyword})}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </th:block>
 </th:block>
