@@ -16,9 +16,11 @@
                     <input type="password" class="form-control dupclick" name="pwd" id="pwd" placeholder="PassWord...">
                 </div>
 
-<!--                <div class="mb-3 text-danger" th:if="${not empty param.errMsg}">-->
+<!--                <div class="mb-3 text-danger" th:if="${not empty errMsg}">-->
 <!--                    <p>관리자에게 문의해주세요</p>-->
 <!--                </div>-->
+
+                <div th:text="${errMsg?: _}">없음........</div>
 
                 <button type="submit" class="btn btn-success">Submit</button>
             </form>

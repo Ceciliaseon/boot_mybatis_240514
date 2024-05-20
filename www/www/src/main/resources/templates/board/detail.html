@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <th:block th:replace="~{layout :: setFragment(~{this::content})}">
     <th:block th:fragment="content">
         <th:block th:with="bvo=${bdto.bvo}">
@@ -62,8 +63,78 @@
                 <!--안보이는 폼-->
                 <input type="hidden" name="bno" th:value="${bvo.bno }">
             </form>
+
+            <!--comment line-->
+            <div class="input-group mb-3" >
+                <div  sec:authorize="isAuthenticated()" th:with="auth=${#authentication.getPrincipal()}">
+                    <div th:if="${auth.mvo.nickName ne null}">
+                        <span class="input-group-text" id="cmtWriter">[[${auth.mvo.nickName}]]</span>
+                        <input type="text" id="cmtText" class="form-control" placeholder="Add Comment..." aria-label="Username" aria-describedby="basic-addon1">
+                        <button type="button" class="btn btn-secondary" id="cmtAddBtn">등록</button>
+                    </div>
+                </div>
+                <div sec:authorize="isAnonymous()">
+                    <div>
+                        <span class="input-group-text" id="cmtWriter">비회원</span>
+                        <input type="text" id="cmtText" class="form-control" placeholder="로그인 후 작성 가능.." aria-label="Username" aria-describedby="basic-addon1" disabled="disabled">
+                        <button type="button" class="btn btn-danger" id="cmtAddBtn" disabled="disabled">등록x</button>
+                    </div>
+                </div>
+            </div>
+
+            <!--post line-->
+
+            <ul class="list-group list-group-flush" id="cmtListArea">
+                <li class="list-group-item">
+                    <div class="input-group mb-3">
+                        <div class="fw-bold" >Writer</div>
+                        content
+                    </div>
+                    <span class="badge rounded-pill text-bg-warning">regDate</span>
+                </li>
+            </ul>
+
+            <!--spread line-->
+            <div>
+                <button type="button" id="moreBtn" data-page="1" class="btn btn-dark" style="visibility:hidden">더보기+</button>
+            </div>
+
+            <!--modal line-->
+            <div class="modal" id="myModal" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modWriter">Writer</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <!-- 모달을 띄울때만 id 값을 가지고 오기 때문에 id 를 사용할 수 있음 -->
+                            <input type="text" class="form-control" id="cmtTextMod"> <!-- content -->
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="cmtModBtn">Modify</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+            <th:bloack sec:authorize="isAuthenticated()" th:with="auth=${#authentication.getPrincipal()}">
+                <script th:inline="javascript">
+                    const nickName = [[${auth.mvo.nickName}]];
+                    console.log(nickName);
+                </script>
+            </th:bloack>
+
+        <script th:inline="javascript">
+            const bnoVal = [[${bvo.bno}]];
+            console.log(bnoVal);
+        </script>
         <script th:src="@{/js/boardDetail.js}"></script>
+        <script th:src="@{/js/boardComment.js}"></script>
+        <script>
+            spreadCommentList(bnoVal);
+        </script>
         </th:block>
     </th:block>
 </th:block>

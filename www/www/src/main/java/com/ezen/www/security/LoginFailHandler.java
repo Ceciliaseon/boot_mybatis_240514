@@ -35,6 +35,7 @@ public class LoginFailHandler implements AuthenticationFailureHandler {
         request.setAttribute("email", authEmail);
         request.setAttribute("errMsg", errorMessage);
 
+//        request.getRequestDispatcher("/member/login?error").forward(request, response);
         request.getRequestDispatcher("/member/login").include(request, response);
         //response.sendRedirect("/member/login?error="+ errorMessage);
     }
